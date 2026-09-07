@@ -17,6 +17,14 @@ spec:
     volumeMounts:
     - name: workspace-volume
       mountPath: /home/jenkins/agent
+  - name: kubectl
+    image: bitnami/kubectl:latest
+    command:
+    - sleep
+    args:
+    - 9999999
+    securityContext:
+      runAsUser: 0
   volumes:
   - name: workspace-volume
     emptyDir: {}
@@ -47,10 +55,13 @@ spec:
         }
         stage('Deploy to K8s') {
             steps {
-                sh '''
-                    kubectl apply -f k8s-deployment.yaml
-                    echo "배포 완료"
-                '''
+                container('kubectl') {
+                    sh '''
+                        kubectl apply -f k8s-deployment.yaml
+                        kubectl rollout status deployment/cicd-test
+                        echo "배포 완료"
+                    '''
+                }
             }
         }
     }
