@@ -57,8 +57,8 @@ spec:
             steps {
                 container('kubectl') {
                     sh '''
-                        kubectl apply -f k8s-deployment.yaml
-                        kubectl rollout status deployment/cicd-test
+                        kubectl apply -f k8s-deployment.yaml -n default
+                        kubectl rollout status deployment/cicd-test -n default
                         echo "배포 완료"
                     '''
                 }
