@@ -45,7 +45,7 @@ spec:
                         /kaniko/executor \
                           --context=/home/jenkins/agent/workspace/github-cicd \
                           --dockerfile=/home/jenkins/agent/workspace/github-cicd/Dockerfile \
-                          --destination=localhost:5000/cicd-test:latest \
+                          --destination=registry.kube-system.svc.cluster.local:80/cicd-test:latest \
                           --insecure
                     '''
                     echo 'Docker 이미지 빌드 완료'

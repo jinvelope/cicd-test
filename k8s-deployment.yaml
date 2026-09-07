@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: cicd-test
-        image: localhost:5000/cicd-test:latest
+        image: registry.kube-system.svc.cluster.local:80/cicd-test:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
