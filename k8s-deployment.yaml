@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
       - name: cicd-test
-        image: cicd-test:latest
-        imagePullPolicy: Never
+        image: localhost:5000/cicd-test:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 3000
 ---

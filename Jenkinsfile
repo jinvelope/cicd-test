@@ -45,9 +45,8 @@ spec:
                         /kaniko/executor \
                           --context=/home/jenkins/agent/workspace/github-cicd \
                           --dockerfile=/home/jenkins/agent/workspace/github-cicd/Dockerfile \
-                          --destination=cicd-test:latest \
-                          --no-push \
-                          --tarPath=/home/jenkins/agent/cicd-test.tar
+                          --destination=localhost:5000/cicd-test:latest \
+                          --insecure
                     '''
                     echo 'Docker 이미지 빌드 완료'
                 }
