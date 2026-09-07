@@ -8,18 +8,18 @@ spec:
   containers:
   - name: jnlp
     image: jenkins/inbound-agent:latest
-  - name: dind
-    image: docker:24-dind
-    securityContext:
-      privileged: true
-    env:
-    - name: DOCKER_TLS_CERTDIR
-      value: ""
-  - name: docker-cli
-    image: docker:24-cli
-    env:
-    - name: DOCKER_HOST
-      value: tcp://localhost:2375
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:debug
+    command:
+    - sleep
+    args:
+    - 9999999
+    volumeMounts:
+    - name: workspace-volume
+      mountPath: /home/jenkins/agent
+  volumes:
+  - name: workspace-volume
+    emptyDir: {}
 """
         }
     }
@@ -32,8 +32,15 @@ spec:
         }
         stage('Build Docker Image') {
             steps {
-                container('docker-cli') {
-                    sh 'sleep 5 && docker build -t cicd-test:latest .'
+                container('kaniko') {
+                    sh '''
+                        /kaniko/executor \
+                          --context=/home/jenkins/agent/workspace/github-cicd \
+                          --dockerfile=/home/jenkins/agent/workspace/github-cicd/Dockerfile \
+                          --destination=cicd-test:latest \
+                          --no-push \
+                          --tarPath=/home/jenkins/agent/cicd-test.tar
+                    '''
                     echo 'Docker 이미지 빌드 완료'
                 }
             }
