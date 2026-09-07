@@ -8,13 +8,18 @@ spec:
   containers:
   - name: jnlp
     image: jenkins/inbound-agent:latest
-  - name: docker
+  - name: dind
     image: docker:24-dind
     securityContext:
       privileged: true
     env:
     - name: DOCKER_TLS_CERTDIR
       value: ""
+  - name: docker-cli
+    image: docker:24-cli
+    env:
+    - name: DOCKER_HOST
+      value: tcp://localhost:2375
 """
         }
     }
@@ -27,8 +32,8 @@ spec:
         }
         stage('Build Docker Image') {
             steps {
-                container('docker') {
-                    sh 'docker build -t cicd-test:latest .'
+                container('docker-cli') {
+                    sh 'sleep 5 && docker build -t cicd-test:latest .'
                     echo 'Docker 이미지 빌드 완료'
                 }
             }
